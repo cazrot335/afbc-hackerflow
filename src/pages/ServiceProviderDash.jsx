@@ -1,0 +1,374 @@
+import React, { useState } from 'react';
+
+const ServiceProviderDashboard = () => {
+  const [activeSection, setActiveSection] = useState('profile');
+  const [profile, setProfile] = useState({
+    businessName: '',
+    contact: '',
+    location: '',
+    gstNo: '',
+    images: []
+  });
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+
+  const [services, setServices] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const newImages = files.slice(0, 4 - profile.images.length);
+    
+    setProfile(prev => ({
+      ...prev,
+      images: [...prev.images, ...newImages.map(file => URL.createObjectURL(file))]
+    }));
+  };
+
+  const handleProfileUpdate = (e) => {
+    const { name, value } = e.target;
+    setProfile(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const saveProfile = () => {
+    // Add logic to save profile details
+    console.log('Profile saved:', profile);
+    setIsEditingProfile(false);
+  };
+
+  const addService = () => {
+    setServices([...services, {
+      name: '',
+      description: '',
+      pricing: '',
+      availability: '',
+      specialOffer: ''
+    }]);
+  };
+
+  const updateService = (index, field, value) => {
+    const updatedServices = [...services];
+    updatedServices[index][field] = value;
+    setServices(updatedServices);
+  };
+
+  const deleteService = (index) => {
+    const updatedServices = services.filter((_, i) => i !== index);
+    setServices(updatedServices);
+  };
+
+  const saveServiceChanges = () => {
+    // Add logic to save service catalog
+    console.log('Services saved:', services);
+  };
+
+  const styles = {
+    dashboard: {
+      display: 'flex',
+      height: '100vh',
+      fontFamily: 'Inter, sans-serif',
+      backgroundColor: '#f4f6f9'
+    },
+    sidebar: {
+      width: '250px',
+      backgroundColor: '#2c3e50',
+      color: 'white',
+      padding: '20px'
+    },
+    sidebarTitle: {
+      fontSize: '24px',
+      fontWeight: '700',
+      marginBottom: '30px',
+      textAlign: 'center',
+      color: '#ecf0f1'
+    },
+    sidebarNav: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px'
+    },
+    navButton: {
+      backgroundColor: 'transparent',
+      color: '#bdc3c7',
+      border: 'none',
+      padding: '12px 15px',
+      textAlign: 'left',
+      cursor: 'pointer',
+      borderRadius: '5px',
+      transition: 'all 0.3s ease'
+    },
+    activeNavButton: {
+      backgroundColor: '#34495e',
+      color: 'white'
+    },
+    content: {
+      flex: 1,
+      overflowY: 'auto',
+      padding: '30px',
+      backgroundColor: '#ecf0f1'
+    },
+    sectionTitle: {
+      marginBottom: '20px',
+      color: '#2c3e50',
+      borderBottom: '2px solid #3498db',
+      paddingBottom: '10px'
+    },
+    formGroup: {
+      marginBottom: '15px'
+    },
+    input: {
+      width: '100%',
+      padding: '10px',
+      border: '1px solid #ddd',
+      borderRadius: '4px',
+      fontSize: '14px'
+    },
+    imageUpload: {
+      display: 'flex',
+      gap: '10px',
+      marginTop: '10px'
+    },
+    imagePreview: {
+      width: '100px',
+      height: '100px',
+      objectFit: 'cover',
+      borderRadius: '8px'
+    },
+    serviceCard: {
+      backgroundColor: 'white',
+      border: '1px solid #e1e4e8',
+      borderRadius: '8px',
+      padding: '15px',
+      marginBottom: '15px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+    },
+    addButton: {
+      backgroundColor: '#3498db',
+      color: 'white',
+      border: 'none',
+      padding: '10px 15px',
+      borderRadius: '4px',
+      cursor: 'pointer'
+    },
+    deleteButton: {
+      backgroundColor: '#e74c3c',
+      color: 'white',
+      border: 'none',
+      padding: '10px 15px',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      marginTop: '10px'
+    },
+    saveButton: {
+      backgroundColor: '#2ecc71',
+      color: 'white',
+      border: 'none',
+      padding: '10px 15px',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      marginTop: '10px'
+    },
+    serviceSaveButton: {
+      backgroundColor: '#2ecc71',
+      color: 'white',
+      border: 'none',
+      padding: '10px 15px',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      marginTop: '20px',
+      marginLeft: '10px'
+    },
+    editButton: {
+      backgroundColor: '#f39c12',
+      color: 'white',
+      border: 'none',
+      padding: '10px 15px',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      marginTop: '10px'
+    }
+  };
+
+  return (
+    <div style={styles.dashboard}>
+      <div style={styles.sidebar}>
+        <div style={styles.sidebarTitle}>ServicePro</div>
+        <div style={styles.sidebarNav}>
+          <button 
+            style={{
+              ...styles.navButton, 
+              ...(activeSection === 'profile' ? styles.activeNavButton : {})
+            }}
+            onClick={() => setActiveSection('profile')}
+          >
+            Business Profile
+          </button>
+          <button 
+            style={{
+              ...styles.navButton, 
+              ...(activeSection === 'services' ? styles.activeNavButton : {})
+            }}
+            onClick={() => setActiveSection('services')}
+          >
+            Service Catalog
+          </button>
+          <button 
+            style={{
+              ...styles.navButton, 
+              ...(activeSection === 'appointments' ? styles.activeNavButton : {})
+            }}
+            onClick={() => setActiveSection('appointments')}
+          >
+            Appointments
+          </button>
+        </div>
+      </div>
+
+      <div style={styles.content}>
+        {activeSection === 'profile' && (
+          <div>
+            <h2 style={styles.sectionTitle}>Business Profile</h2>
+            <div style={styles.formGroup}>
+              <input
+                type="text"
+                name="businessName"
+                placeholder="Business Name"
+                value={profile.businessName}
+                onChange={handleProfileUpdate}
+                style={styles.input}
+                disabled={!isEditingProfile}
+              />
+            </div>
+            <div style={styles.formGroup}>
+              <input
+                type="text"
+                name="contact"
+                placeholder="Contact Number"
+                value={profile.contact}
+                onChange={handleProfileUpdate}
+                style={styles.input}
+                disabled={!isEditingProfile}
+              />
+            </div>
+            <div style={styles.formGroup}>
+              <input
+                type="text"
+                name="location"
+                placeholder="Business Location"
+                value={profile.location}
+                onChange={handleProfileUpdate}
+                style={styles.input}
+                disabled={!isEditingProfile}
+              />
+            </div>
+            <div style={styles.formGroup}>
+              <input
+                type="text"
+                name="gstNo"
+                placeholder="GST Number"
+                value={profile.gstNo}
+                onChange={handleProfileUpdate}
+                style={styles.input}
+                disabled={!isEditingProfile}
+              />
+            </div>
+            <div style={styles.formGroup}>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                disabled={!isEditingProfile || profile.images.length >= 4}
+              />
+              <div style={styles.imageUpload}>
+                {profile.images.map((img, index) => (
+                  <img 
+                    key={index} 
+                    src={img} 
+                    alt={`Business ${index + 1}`} 
+                    style={styles.imagePreview} 
+                  />
+                ))}
+              </div>
+            </div>
+            {isEditingProfile ? (
+              <button onClick={saveProfile} style={styles.saveButton}>
+                Save Profile
+              </button>
+            ) : (
+              <button onClick={() => setIsEditingProfile(true)} style={styles.editButton}>
+                Edit Profile
+              </button>
+            )}
+          </div>
+        )}
+
+        {activeSection === 'services' && (
+          <div>
+            <h2 style={styles.sectionTitle}>Service Catalog</h2>
+            {services.map((service, index) => (
+              <div key={index} style={styles.serviceCard}>
+                <input
+                  type="text"
+                  placeholder="Service Name"
+                  value={service.name}
+                  onChange={(e) => updateService(index, 'name', e.target.value)}
+                  style={styles.input}
+                />
+                <textarea
+                  placeholder="Service Description"
+                  value={service.description}
+                  onChange={(e) => updateService(index, 'description', e.target.value)}
+                  style={{...styles.input, minHeight: '100px'}}
+                />
+                <input
+                  type="text"
+                  placeholder="Pricing"
+                  value={service.pricing}
+                  onChange={(e) => updateService(index, 'pricing', e.target.value)}
+                  style={styles.input}
+                />
+                <input
+                  type="text"
+                  placeholder="Availability"
+                  value={service.availability}
+                  onChange={(e) => updateService(index, 'availability', e.target.value)}
+                  style={styles.input}
+                />
+                <input
+                  type="text"
+                  placeholder="Special Offer"
+                  value={service.specialOffer}
+                  onChange={(e) => updateService(index, 'specialOffer', e.target.value)}
+                  style={styles.input}
+                />
+                <button onClick={() => deleteService(index)} style={styles.deleteButton}>
+                  Delete Service
+                </button>
+              </div>
+            ))}
+            <div style={{ display: 'flex' }}>
+              <button onClick={addService} style={styles.addButton}>
+                Add Service
+              </button>
+              <button onClick={saveServiceChanges} style={styles.serviceSaveButton}>
+                Save Changes
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeSection === 'appointments' && (
+          <div>
+            <h2 style={styles.sectionTitle}>Appointments</h2>
+            <p>No appointments yet. Appointments will appear here once services are booked.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ServiceProviderDashboard;

@@ -35,7 +35,11 @@ const Authentication = () => {
       console.log(response.data);
       // Store token and navigate to respective dashboard
       localStorage.setItem('jwtToken', response.data.token);
-      navigate(`/dashboard/${role.toLowerCase()}`);
+      if (role.toLowerCase() === 'service_provider') {
+        navigate('/serviceProviderDashboard');
+      } else {
+        navigate('/dashboard/*');
+      }
     } catch (error) {
       console.error(error);
       // Handle error (e.g., show error message)
@@ -50,7 +54,11 @@ const Authentication = () => {
       console.log(res.data);
       // Store token and navigate to respective dashboard
       localStorage.setItem('jwtToken', res.data.token);
-      navigate(`/dashboard/${role.toLowerCase()}`);
+      if (res.data.role === 'service_provider') {
+        navigate('/serviceProviderDashboard');
+      } else {
+        navigate('/dashboard/*');
+      }
     } catch (error) {
       console.error(error);
       // Handle error (e.g., show error message)
