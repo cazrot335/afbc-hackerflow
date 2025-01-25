@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/landing.jsx';
 import Authentication from "./pages/Authentication";
@@ -14,5 +14,6 @@ function App() {
       </Routes>
     </Router>
   );
-};
+}
+
 export default App;
