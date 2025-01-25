@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import './styles/LandingPage.css';
 import { 
   ShoppingCart, 
@@ -8,8 +9,9 @@ import {
   User 
 } from 'lucide-react';
 
-const LandingPage = ({ onRoleSelect }) => {
+const LandingPage = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const features = [
     { 
@@ -34,8 +36,9 @@ const LandingPage = ({ onRoleSelect }) => {
     }
   ];
 
+  // Handle role selection and navigate to the respective authentication page
   const handleRoleSelection = (role) => {
-    onRoleSelect(role);
+    navigate(`/authentication/${role}`); // Correct route
     setShowAuthModal(false);
   };
 
@@ -65,8 +68,8 @@ const LandingPage = ({ onRoleSelect }) => {
 
   return (
     <div className="landing-page">
-      {showAuthModal && <AuthModal />}
-
+      {showAuthModal && <AuthModal />} {/* Show modal when true */}
+      <LandingPageNavbar setShowAuthModal={setShowAuthModal} />
       <div className="content">
         <div className="text-section">
           <h1>Connect. Book. Experience.</h1>
