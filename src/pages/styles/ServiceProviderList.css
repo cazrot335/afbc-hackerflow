@@ -1,0 +1,46 @@
+.provider-list {
+    padding: 20px;
+  }
+  
+  .provider-list h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .provider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .provider-card {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .provider-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .provider-info {
+    flex-grow: 1;
+  }
+  
+  .provider-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #1f2937;
+  }
+  
+  .provider-info p {
+    margin: 5px 0;
+    color: #4b5563;
+  }
+  
