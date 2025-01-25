@@ -1,180 +1,179 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom right, #f0f4ff, #e0e7ff);
-  }
-  
-  .landing-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .content {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-    padding: 2rem;
-  }
-  
-  .text-section {
-    flex: 1;
-    text-align: left;
-  }
-  
-  .text-section h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-  
-  .text-section p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 1.5rem;
-  }
-  
-  .get-started-btn {
-    display: inline-flex;
-    align-items: center;
-    background-color: #3b82f6;
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 30px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .get-started-btn:hover {
-    background-color: #2563eb;
-  }
-  
-  .get-started-btn .icon {
-    margin-right: 0.5rem;
-  }
-  
-  .features {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    flex: 1;
-  }
-  
-  .feature-card {
-    background-color: #fff;
-    border-radius: 1rem;
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .feature-card .icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .feature-card.blue {
-    border: 2px solid #3b82f6;
-  }
-  
-  .feature-card.green {
-    border: 2px solid #10b981;
-  }
-  
-  .feature-card.purple {
-    border: 2px solid #8b5cf6;
-  }
-  
-  .feature-card.indigo {
-    border: 2px solid #6366f1;
-  }
-  
-  .feature-card h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #333;
-  }
-  
-  .auth-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
-  
-  .auth-modal-content {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 1rem;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-  }
-  
-  .auth-modal-content h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-  }
-  
-  .role-buttons {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .role-buttons button {
-    flex: 1;
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .role-buttons .service-user {
-    background-color: #3b82f6;
-    color: #fff;
-  }
-  
-  .role-buttons .service-user:hover {
-    background-color: #2563eb;
-  }
-  
-  .role-buttons .service-provider {
-    background-color: #10b981;
-    color: #fff;
-  }
-  
-  .role-buttons .service-provider:hover {
-    background-color: #059669;
-  }
-  
-  .role-buttons .icon {
-    display: block;
-    margin: 0 auto 0.5rem;
-    font-size: 1.5rem;
-  }
-  
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom right, #f0f4ff, #e0e7ff);
+}
+
+.landing-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.text-section {
+  flex: 1;
+  text-align: left;
+}
+
+.text-section h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.text-section p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.get-started-btn {
+  display: inline-flex;
+  align-items: center;
+  background-color: #3b82f6;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.get-started-btn:hover {
+  background-color: #2563eb;
+}
+
+.get-started-btn .icon {
+  margin-right: 0.5rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.feature-card {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card .icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card.blue {
+  border: 2px solid #3b82f6;
+}
+
+.feature-card.green {
+  border: 2px solid #10b981;
+}
+
+.feature-card.purple {
+  border: 2px solid #8b5cf6;
+}
+
+.feature-card.indigo {
+  border: 2px solid #6366f1;
+}
+
+.feature-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.auth-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.auth-modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.auth-modal-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.role-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.role-buttons button {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.role-buttons .service-user {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.role-buttons .service-user:hover {
+  background-color: #2563eb;
+}
+
+.role-buttons .service-provider {
+  background-color: #10b981;
+  color: #fff;
+}
+
+.role-buttons .service-provider:hover {
+  background-color: #059669;
+}
+
+.role-buttons .icon {
+  display: block;
+  margin: 0 auto 0.5rem;
+  font-size: 1.5rem;
+}
