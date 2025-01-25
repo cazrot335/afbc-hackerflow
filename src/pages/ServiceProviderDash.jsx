@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { getToken, isTokenExpired } from '../utils/auth';
+import OpenStreetMapAutocomplete from '../components/OpenStreetMapAutocomplete';
 
 const ServiceProviderDashboard = () => {
   const [activeSection, setActiveSection] = useState('profile');
@@ -7,20 +10,59 @@ const ServiceProviderDashboard = () => {
     contact: '',
     location: '',
     gstNo: '',
-    images: []
+    images: [] // Ensure images is initialized as an empty array
   });
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   const [services, setServices] = useState([]);
   const [appointments, setAppointments] = useState([]);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = getToken();
+      if (!token || isTokenExpired(token)) {
+        console.error('Token expired or invalid');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:5000/api/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    const fetchServices = async () => {
+      const token = getToken();
+      if (!token || isTokenExpired(token)) {
+        console.error('Token expired or invalid');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:5000/api/services', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setServices(response.data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      }
+    };
+
+    fetchProfile();
+    fetchServices();
+  }, []);
+
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.slice(0, 4 - profile.images.length);
+    const newImages = files.slice(0, 4 - (profile.images ? profile.images.length : 0));
     
     setProfile(prev => ({
       ...prev,
-      images: [...prev.images, ...newImages.map(file => URL.createObjectURL(file))]
+      images: [...(prev.images || []), ...newImages.map(file => URL.createObjectURL(file))]
     }));
   };
 
@@ -32,10 +74,29 @@ const ServiceProviderDashboard = () => {
     }));
   };
 
-  const saveProfile = () => {
-    // Add logic to save profile details
-    console.log('Profile saved:', profile);
-    setIsEditingProfile(false);
+  const handleLocationSelect = (place) => {
+    setProfile(prev => ({
+      ...prev,
+      location: place.display_name
+    }));
+  };
+
+  const saveProfile = async () => {
+    const token = getToken();
+    if (!token || isTokenExpired(token)) {
+      console.error('Token expired or invalid');
+      return;
+    }
+
+    try {
+      const response = await axios.put('http://localhost:5000/api/profile', profile, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('Profile saved:', response.data);
+      setIsEditingProfile(false);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
   };
 
   const addService = () => {
@@ -54,14 +115,48 @@ const ServiceProviderDashboard = () => {
     setServices(updatedServices);
   };
 
-  const deleteService = (index) => {
-    const updatedServices = services.filter((_, i) => i !== index);
-    setServices(updatedServices);
+  const deleteService = async (index) => {
+    const token = getToken();
+    if (!token || isTokenExpired(token)) {
+      console.error('Token expired or invalid');
+      return;
+    }
+
+    try {
+      const serviceId = services[index]._id;
+      await axios.delete(`http://localhost:5000/api/services/${serviceId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const updatedServices = services.filter((_, i) => i !== index);
+      setServices(updatedServices);
+    } catch (error) {
+      console.error('Error deleting service:', error);
+    }
   };
 
-  const saveServiceChanges = () => {
-    // Add logic to save service catalog
-    console.log('Services saved:', services);
+  const saveServiceChanges = async () => {
+    const token = getToken();
+    if (!token || isTokenExpired(token)) {
+      console.error('Token expired or invalid');
+      return;
+    }
+
+    try {
+      for (const service of services) {
+        if (service._id) {
+          await axios.put(`http://localhost:5000/api/services/${service._id}`, service, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } else {
+          await axios.post('http://localhost:5000/api/services', service, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        }
+      }
+      console.log('Services saved:', services);
+    } catch (error) {
+      console.error('Error saving services:', error);
+    }
   };
 
   const styles = {
@@ -235,7 +330,7 @@ const ServiceProviderDashboard = () => {
                 type="text"
                 name="businessName"
                 placeholder="Business Name"
-                value={profile.businessName}
+                value={profile.businessName || ''}
                 onChange={handleProfileUpdate}
                 style={styles.input}
                 disabled={!isEditingProfile}
@@ -246,29 +341,21 @@ const ServiceProviderDashboard = () => {
                 type="text"
                 name="contact"
                 placeholder="Contact Number"
-                value={profile.contact}
+                value={profile.contact || ''}
                 onChange={handleProfileUpdate}
                 style={styles.input}
                 disabled={!isEditingProfile}
               />
             </div>
             <div style={styles.formGroup}>
-              <input
-                type="text"
-                name="location"
-                placeholder="Business Location"
-                value={profile.location}
-                onChange={handleProfileUpdate}
-                style={styles.input}
-                disabled={!isEditingProfile}
-              />
+              <OpenStreetMapAutocomplete onSelect={handleLocationSelect} />
             </div>
             <div style={styles.formGroup}>
               <input
                 type="text"
                 name="gstNo"
                 placeholder="GST Number"
-                value={profile.gstNo}
+                value={profile.gstNo || ''}
                 onChange={handleProfileUpdate}
                 style={styles.input}
                 disabled={!isEditingProfile}
@@ -280,10 +367,10 @@ const ServiceProviderDashboard = () => {
                 accept="image/*"
                 multiple
                 onChange={handleImageUpload}
-                disabled={!isEditingProfile || profile.images.length >= 4}
+                disabled={!isEditingProfile || (profile.images && profile.images.length >= 4)}
               />
               <div style={styles.imageUpload}>
-                {profile.images.map((img, index) => (
+                {profile.images && profile.images.map((img, index) => (
                   <img 
                     key={index} 
                     src={img} 
@@ -313,34 +400,34 @@ const ServiceProviderDashboard = () => {
                 <input
                   type="text"
                   placeholder="Service Name"
-                  value={service.name}
+                  value={service.name || ''}
                   onChange={(e) => updateService(index, 'name', e.target.value)}
                   style={styles.input}
                 />
                 <textarea
                   placeholder="Service Description"
-                  value={service.description}
+                  value={service.description || ''}
                   onChange={(e) => updateService(index, 'description', e.target.value)}
                   style={{...styles.input, minHeight: '100px'}}
                 />
                 <input
                   type="text"
                   placeholder="Pricing"
-                  value={service.pricing}
+                  value={service.pricing || ''}
                   onChange={(e) => updateService(index, 'pricing', e.target.value)}
                   style={styles.input}
                 />
                 <input
                   type="text"
                   placeholder="Availability"
-                  value={service.availability}
+                  value={service.availability || ''}
                   onChange={(e) => updateService(index, 'availability', e.target.value)}
                   style={styles.input}
                 />
                 <input
                   type="text"
                   placeholder="Special Offer"
-                  value={service.specialOffer}
+                  value={service.specialOffer || ''}
                   onChange={(e) => updateService(index, 'specialOffer', e.target.value)}
                   style={styles.input}
                 />
