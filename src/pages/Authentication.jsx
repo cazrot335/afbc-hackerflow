@@ -55,7 +55,7 @@ const Authentication = () => {
       // Store token and navigate to respective dashboard
       localStorage.setItem('jwtToken', res.data.token);
       if (res.data.role === 'service_provider') {
-        navigate('/serviceProviderDashboard');
+        navigate('/serviceProviderDashbo');
       } else {
         navigate('/dashboard/*');
       }

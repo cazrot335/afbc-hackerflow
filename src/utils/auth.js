@@ -5,7 +5,12 @@ export const storeToken = (token) => {
 
 // Function to retrieve the token
 export const getToken = () => {
-  return localStorage.getItem('jwtToken');
+  return localStorage.getItem('jwtToken'); // Correct the token key
+};
+
+// Function to remove the token
+export const removeToken = () => {
+  localStorage.removeItem('jwtToken');
 };
 
 // Function to check if the token is expired

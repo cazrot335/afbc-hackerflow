@@ -52,8 +52,26 @@ const ServiceProviderDashboard = () => {
       }
     };
 
+    const fetchAppointments = async () => {
+      const token = getToken();
+      if (!token || isTokenExpired(token)) {
+        console.error('Token expired or invalid');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:5000/api/appointments', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setAppointments(response.data);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
     fetchProfile();
     fetchServices();
+    fetchAppointments();
   }, []);
 
   const handleImageUpload = (e) => {
@@ -63,6 +81,13 @@ const ServiceProviderDashboard = () => {
     setProfile(prev => ({
       ...prev,
       photos: [...(prev.photos || []), ...newImages.map(file => URL.createObjectURL(file))]
+    }));
+  };
+
+  const handleRemoveImage = (index) => {
+    setProfile(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
     }));
   };
 
@@ -159,6 +184,30 @@ const ServiceProviderDashboard = () => {
     }
   };
 
+  const handleUpdateStatus = async (appointmentId, status) => {
+    const token = getToken();
+    if (!token || isTokenExpired(token)) {
+      console.error('Token expired or invalid');
+      return;
+    }
+
+    try {
+      const response = await axios.put(`http://localhost:5000/api/appointments/${appointmentId}/status`, {
+        status,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setAppointments((prev) =>
+        prev.map((appointment) =>
+          appointment._id === appointmentId ? response.data : appointment
+        )
+      );
+    } catch (error) {
+      console.error('Error updating appointment status:', error);
+    }
+  };
+
   const styles = {
     dashboard: {
       display: 'flex',
@@ -229,7 +278,23 @@ const ServiceProviderDashboard = () => {
       width: '100px',
       height: '100px',
       objectFit: 'cover',
-      borderRadius: '8px'
+      borderRadius: '8px',
+      position: 'relative'
+    },
+    removeButton: {
+      position: 'absolute',
+      top: '5px',
+      right: '5px',
+      backgroundColor: 'red',
+      color: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      cursor: 'pointer',
+      width: '20px',
+      height: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     serviceCard: {
       backgroundColor: 'white',
@@ -371,12 +436,19 @@ const ServiceProviderDashboard = () => {
               />
               <div style={styles.imageUpload}>
                 {profile.photos && profile.photos.map((img, index) => (
-                  <img 
-                    key={index} 
-                    src={img} 
-                    alt={`Business ${index + 1}`} 
-                    style={styles.imagePreview} 
-                  />
+                  <div key={index} style={{ position: 'relative' }}>
+                    <img 
+                      src={img} 
+                      alt={`Business ${index + 1}`} 
+                      style={styles.imagePreview} 
+                    />
+                    <button 
+                      style={styles.removeButton} 
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -450,7 +522,19 @@ const ServiceProviderDashboard = () => {
         {activeSection === 'appointments' && (
           <div>
             <h2 style={styles.sectionTitle}>Appointments</h2>
-            <p>No appointments yet. Appointments will appear here once services are booked.</p>
+            {appointments.length === 0 ? (
+              <p>No appointments yet. Appointments will appear here once services are booked.</p>
+            ) : (
+              appointments.map((appointment) => (
+                <div key={appointment._id} style={styles.serviceCard}>
+                  <h3>{appointment.service.name}</h3>
+                  <p>Date: {new Date(appointment.date).toLocaleString()}</p>
+                  <p>Status: {appointment.status}</p>
+                  <button onClick={() => handleUpdateStatus(appointment._id, 'confirmed')}>Confirm</button>
+                  <button onClick={() => handleUpdateStatus(appointment._id, 'rejected')}>Reject</button>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
