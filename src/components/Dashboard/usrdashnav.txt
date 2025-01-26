@@ -1,20 +1,25 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../pages/styles/UserDashboardNavbar.css";
 
-const UserDashboardNavbar = ({ setActiveTab }) => {
+const UserDashboardNavbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <nav className="navbar">
-      <div className="logo" onClick={() => setActiveTab("services")}>
+      <div className="logo" onClick={() => navigate("/")}>
         ServiceFinder
       </div>
       <div className="nav-links">
-        <button onClick={() => setActiveTab("services")}>Services</button>
-        <button onClick={() => setActiveTab("bookings")}>Bookings</button>
-        <button onClick={() => setActiveTab("notifications")}>Notifications</button>
-        <button onClick={() => setActiveTab("favourites")}>Favourites</button>
-        <button onClick={() => setActiveTab("support")}>Support/Help</button>
+        <button onClick={() => navigate("/services")}>Services</button>
+        <button onClick={() => navigate("/service-history")}>
+          Service History
+        </button>
+        <button>Bookings</button>
+        <button>Notifications</button>
+        <button>Favourites</button>
+        <button>Support/Help</button>
         <div
           className="profile-section"
           onMouseEnter={() => setShowProfileMenu(true)}
@@ -27,9 +32,9 @@ const UserDashboardNavbar = ({ setActiveTab }) => {
           />
           {showProfileMenu && (
             <div className="profile-menu">
-              <button onClick={() => setActiveTab("edit-profile")}>Edit Profile</button>
-              <button onClick={() => setActiveTab("payment-history")}>Payment History</button>
-              <button onClick={() => setActiveTab("logout")}>Logout</button>
+              <button>Edit Profile</button>
+              <button>Payment History</button>
+              <button onClick={() => navigate("/logout")}>Logout</button>
             </div>
           )}
         </div>
