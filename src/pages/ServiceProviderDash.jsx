@@ -10,7 +10,7 @@ const ServiceProviderDashboard = () => {
     contact: '',
     location: '',
     gstNo: '',
-    images: [] // Ensure images is initialized as an empty array
+    photos: [] // Ensure photos is initialized as an empty array
   });
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
@@ -58,11 +58,11 @@ const ServiceProviderDashboard = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.slice(0, 4 - (profile.images ? profile.images.length : 0));
+    const newImages = files.slice(0, 4 - (profile.photos ? profile.photos.length : 0));
     
     setProfile(prev => ({
       ...prev,
-      images: [...(prev.images || []), ...newImages.map(file => URL.createObjectURL(file))]
+      photos: [...(prev.photos || []), ...newImages.map(file => URL.createObjectURL(file))]
     }));
   };
 
@@ -367,10 +367,10 @@ const ServiceProviderDashboard = () => {
                 accept="image/*"
                 multiple
                 onChange={handleImageUpload}
-                disabled={!isEditingProfile || (profile.images && profile.images.length >= 4)}
+                disabled={!isEditingProfile || (profile.photos && profile.photos.length >= 4)}
               />
               <div style={styles.imageUpload}>
-                {profile.images && profile.images.map((img, index) => (
+                {profile.photos && profile.photos.map((img, index) => (
                   <img 
                     key={index} 
                     src={img} 
